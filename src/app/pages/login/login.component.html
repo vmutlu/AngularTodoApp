@@ -1,0 +1,30 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+<div class="container">
+    <div style="margin-top: 28%;" class="card card-login mx-auto text-center bg-dark">
+        <div  class="card-body">
+            <form [formGroup]="loginForm" (ngSubmit)="login()" method="post">
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    </div>
+                    <input type="text" formControlName="email" name="email" class="form-control" placeholder="veysel_mutlu42@hotmail.com">
+                </div>
+
+                <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    </div>
+                    <input type="password" formControlName="password" name="password" class="form-control" placeholder="123.123B">
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" (click)="login()" value="Login" class="btn btn-outline-danger float-right login_btn">
+                    <input type="submit" style="margin-right: 35%;" routerLink="/register" value="Register" class="btn btn-outline-danger float-right login_btn">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

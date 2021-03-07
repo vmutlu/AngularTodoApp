@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <title></title>
+</head>
+
+<body>
+    <div style="margin-left: 20%; width: 60%; margin-top: 10%;" class="container">
+        <div style="width: 100%;" class="row">
+            <div class="col-md-6">
+                <div class="box box-aqua">
+                    <div class="box-header ui-sortable-handle" style="cursor: move;">
+                        <i class="ion ion-clipboard"></i>
+                        <h3 class="box-title"><u>Veysel MUTLU </u>To Do List</h3>
+                        
+                        <div class="box-tools pull-right">
+                           <!-- <ul style="list-style: none" class="menu">
+                                <li><a>«</a></li>
+                                <li><a>1</a></li>
+                                <li><a>»</a></li>
+                            </ul>-->
+                        <a style="float: right;" (click)="logOut()" >Çıkış Yap</a> <br><hr>
+                            <a style="background-color: yellow; color: red;" (click)="GetCategoryList()" >Kategoriler</a>
+                        </div>
+
+                    </div>
+
+                    <div class="box-body">
+                        <ul [formGroup]="todoForm" class="todo-list ui-sortable" *ngFor="let todo of todoList">
+                            <li>
+                                <span class="handle ui-sortable-handle">
+                                    <i class="fa fa-ellipsis-v"></i>
+                                    <i class="fa fa-ellipsis-v"></i>
+                                </span>
+                                <input type="checkbox" formControlName="isFavorite" [value]="todo.isFavorite">
+                                <span class="text">{{todo.content}}</span>
+                                <small class="label label-danger"><i class="fa fa-clock-o"></i> {{todo.dueDate | date:
+                                    'dd-MM-yyyy'}}</small>
+                                <div class="tools">
+                                    <i (click)="getById(todo.id)" class="fa fa-edit"></i>
+                                    <i (click)="remove(todo.id)" class="fa fa-trash-o"></i>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="box-footer clearfix no-border">
+                        <button type="button" (click)="addItem()" class="btn btn-default pull-right"><i
+                                class="fa fa-plus"></i> Yeni Görev Ekle</button>
+                        <button type="button" (click)="addCategory()" class="btn btn-default pull-right"><i
+                                class="fa fa-plus"></i> Yeni Kategori Ekle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="box-body">
+            <div *ngIf="getCategoryVisible" style="margin-left: 20%; width: 60%; margin-top: 3%;" class="container">
+                <div style="width: 100%;" class="row">
+                    <ul [formGroup]="todoForm" class="todo-list ui-sortable" *ngFor="let category of categoryList">
+                        <li>
+                            <span class="handle ui-sortable-handle">
+                                <i class="fa fa-ellipsis-v"></i>
+                                <i class="fa fa-ellipsis-v"></i>
+                            </span>
+                            <span class="text">{{category.name}}</span>           
+                            <div class="tools">
+                                <i (click)="getCategoryById(category.categoryId)" class="fa fa-edit"></i>
+                                <i (click)="removeCategory(category.categoryId)" class="fa fa-trash-o"></i>
+                            </div>                 
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+
+    <div *ngIf="updateCategory" style="margin-left: 20%; width: 60%; margin-top: 3%;" class="container">
+        <div style="width: 100%; margin-left: 25%;" class="row">
+            <div class="col-md-6">
+                <form [formGroup]="categoryForm" (ngSubmit)="updateCategoryy()">
+                    <input type="hidden" [value]="categoryForm.categoryId" formControlName="categoryId">
+                    <label for="fname">Kategori Adı:</label><br>
+                    <input type="text" style="width: 50%; " [value]="categoryForm.name" formControlName="name"><br>
+                    
+                    <input style="margin-left: 40%; width: 120px;" (click)="updateCategoryy()" type="submit" value="Güncelle">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="visible" style="margin-left: 20%; width: 60%; margin-top: 3%;" class="container">
+        <div style="width: 100%; margin-left: 25%;" class="row">
+            <div class="col-md-6">
+                <form [formGroup]="todoForm" (ngSubmit)="add()">
+                    <label for="fname">Todo İçerik:</label><br>
+                    <input type="text" style="width: 50%; " formControlName="content"><br>
+                    <label for="lname">Bitiş Tarihi:</label><br>
+                    <input type="date" style="width: 50%; " formControlName="dueDate"><br>
+                    <label for="lname">Hatırlatma Tarihi:</label><br>
+                    <input type="date" style="width: 50%; " formControlName="reminMeDate"><br>
+                    <input type="checkbox" style="margin-top: 1%;" formControlName="isFavorite"> Favori Durumu<br><br>
+                    <label for="lname">Kategori:</label><br>
+                    <select formControlName="categoryId" style="border-radius: 22px; width: 50%;" class="form-control">
+                        <option *ngFor="let category of categoryList" selected value="{{category.categoryId}}">
+                            {{category.name}}</option>
+                    </select><br><br>
+                    <input style="margin-left: 40%; width: 120px;" type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="categoryVisible" style="margin-left: 20%; width: 60%; margin-top: 3%;" class="container">
+        <div style="width: 100%; margin-left: 25%;" class="row">
+            <div class="col-md-6">
+                <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
+                    <label for="fname">Kategori Adı Giriniz:</label><br>
+                    <input type="text" style="width: 50%; " formControlName="name"><br><br>
+                    <input style="margin-left: 40%; width: 120px;" type="submit" value="Kategori Ekle">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="updateValid" style="margin-left: 20%; width: 60%; margin-top: 3%;" class="container">
+        <div style="width: 100%; margin-left: 25%;" class="row">
+            <div class="col-md-6">
+                <form [formGroup]="todoForm" (ngSubmit)="update()">
+                    <input type="hidden" [value]="todoForm.id">
+                    <label for="fname">Todo İçerik:</label><br>
+                    <input type="text" style="width: 50%; " [value]="todoForm.content" formControlName="content"><br>
+                    <label for="lname">Bitiş Tarihi:</label><br>
+                    <input type="date" style="width: 50%; " [value]="todoForm.dueDate | date: 'dd.dd-MM-yyyy'"
+                        formControlName="dueDate"><br>
+                    <label for="lname">Hatırlatma Tarihi:</label><br>
+                    <input type="date" style="width: 50%; " [value]="todoForm.reminMeDate | date: 'dd.dd-MM-yyyy'"
+                        formControlName="reminMeDate"><br>
+                    <input type="checkbox" style="margin-top: 1%;" [value]="todoForm.isFavorite"
+                        formControlName="isFavorite"> Favori Durumu<br><br>
+                    <label for="lname">Kategori:</label><br>
+                    <select formControlName="categoryId" style="border-radius: 22px; width: 50%;" class="form-control">
+                        <option *ngFor="let category of categoryList" selected [value]="category.categoryId">
+                            {{category.name}}</option>
+                    </select><br><br>
+                    <input style="margin-left: 40%; width: 120px;" type="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br>
+</body>
+
+</html>
